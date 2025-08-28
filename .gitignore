@@ -150,3 +150,6 @@ node_modules
 psd
 thumb
 sketch
+
+# Build output
+build/
