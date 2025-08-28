@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 
 const CartContext = createContext();
 
@@ -31,13 +31,13 @@ export const CartProvider = ({ children }) => {
   }, [cart]);
 
   const addToCart = (product) => {
-    setCart(prevCart => {
+    setCart((prevCart) => {
       // Check if product already exists in cart
-      const existingProduct = prevCart.find(item => item._id === product._id);
-      
+      const existingProduct = prevCart.find((item) => item._id === product._id);
+
       if (existingProduct) {
         // If product exists, increase quantity
-        return prevCart.map(item =>
+        return prevCart.map((item) =>
           item._id === product._id
             ? { ...item, quantity: item.quantity + 1 }
             : item
@@ -50,7 +50,7 @@ export const CartProvider = ({ children }) => {
   };
 
   const removeFromCart = (productId) => {
-    setCart(prevCart => prevCart.filter(item => item._id !== productId));
+    setCart((prevCart) => prevCart.filter((item) => item._id !== productId));
   };
 
   const updateQuantity = (productId, quantity) => {
@@ -58,12 +58,10 @@ export const CartProvider = ({ children }) => {
       removeFromCart(productId);
       return;
     }
-    
-    setCart(prevCart =>
-      prevCart.map(item =>
-        item._id === productId
-          ? { ...item, quantity }
-          : item
+
+    setCart((prevCart) =>
+      prevCart.map((item) =>
+        item._id === productId ? { ...item, quantity } : item
       )
     );
   };
@@ -73,7 +71,7 @@ export const CartProvider = ({ children }) => {
   };
 
   const getCartTotal = () => {
-    return cart.reduce((total, item) => total + (item.price * item.quantity), 0);
+    return cart.reduce((total, item) => total + item.price * item.quantity, 0);
   };
 
   const value = {
@@ -86,11 +84,7 @@ export const CartProvider = ({ children }) => {
     getCartTotal,
   };
 
-  return (
-    <CartContext.Provider value={value}>
-      {children}
-    </CartContext.Provider>
-  );
+  return <CartContext.Provider value={value}>{children}</CartContext.Provider>;
 };
 
 export default CartContext;

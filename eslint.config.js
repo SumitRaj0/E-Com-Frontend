@@ -8,7 +8,31 @@ export default [
   js.configs.recommended,
   prettier,
   {
+    languageOptions: {
+      ecmaVersion: 2022,
+      sourceType: 'module',
+      globals: {
+        // Browser environment
+        window: 'readonly',
+        document: 'readonly',
+        console: 'readonly',
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
+        fetch: 'readonly',
+        localStorage: 'readonly',
+        sessionStorage: 'readonly',
+        atob: 'readonly',
+        btoa: 'readonly',
+        // React globals
+        React: 'readonly',
+      },
+    },
+  },
+  {
     files: ['**/*.{js,jsx}'],
+    ignores: ['**/build/**', '**/node_modules/**', '**/*.min.js', '**/dist/**'],
     plugins: {
       prettier: prettierPlugin,
       react: react,
@@ -37,6 +61,15 @@ export default [
         require: 'readonly',
         module: 'readonly',
         __dirname: 'readonly',
+        // Browser APIs
+        setTimeout: 'readonly',
+        clearTimeout: 'readonly',
+        setInterval: 'readonly',
+        clearInterval: 'readonly',
+        atob: 'readonly',
+        btoa: 'readonly',
+        // React globals
+        React: 'readonly',
       },
       parserOptions: {
         ecmaFeatures: {

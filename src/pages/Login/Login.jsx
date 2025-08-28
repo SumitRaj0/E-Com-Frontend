@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
@@ -13,7 +13,8 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const { cart } = useCart();
-  const { showSuccess, showError, showLoading, updateLoadingToast } = useToast();
+  const { showSuccess, showError, showLoading, updateLoadingToast } =
+    useToast();
   const navigate = useNavigate();
 
   const {
@@ -38,15 +39,19 @@ const Login = () => {
       if (response.success) {
         // Login user in auth context
         await login(response.user, response.token);
-        
+
         // Update loading toast to success
-        updateLoadingToast(loadingToastId, SUCCESS_MESSAGES.AUTH.LOGIN_SUCCESS, 'success');
-        
+        updateLoadingToast(
+          loadingToastId,
+          SUCCESS_MESSAGES.AUTH.LOGIN_SUCCESS,
+          'success'
+        );
+
         // Reset form
         reset();
-        
+
         // Redirect based on cart status
-        setTimeout(() => {
+        window.setTimeout(() => {
           if (cart.length > 0) {
             // If there are items in cart, go to checkout
             navigate('/checkout');
@@ -65,23 +70,23 @@ const Login = () => {
   };
 
   return (
-    <div className="container mt-5">
-      <div className="row justify-content-center">
-        <div className="col-md-6 col-lg-4">
-          <div className="card shadow">
-            <div className="card-body p-4">
-              <h2 className="text-center mb-4">Login</h2>
-              
+    <div className='container mt-5'>
+      <div className='row justify-content-center'>
+        <div className='col-md-6 col-lg-4'>
+          <div className='card shadow'>
+            <div className='card-body p-4'>
+              <h2 className='text-center mb-4'>Login</h2>
+
               <form onSubmit={handleSubmit(onSubmit)}>
                 {/* Email Field */}
-                <div className="mb-3">
-                  <label htmlFor="email" className="form-label">
+                <div className='mb-3'>
+                  <label htmlFor='email' className='form-label'>
                     Email Address
                   </label>
                   <input
-                    type="email"
+                    type='email'
                     className={`form-control ${errors.email ? 'is-invalid' : ''}`}
-                    id="email"
+                    id='email'
                     {...register('email', {
                       required: ERROR_MESSAGES.VALIDATION.REQUIRED_FIELD,
                       pattern: {
@@ -89,46 +94,50 @@ const Login = () => {
                         message: ERROR_MESSAGES.AUTH.INVALID_EMAIL,
                       },
                     })}
-                    placeholder="Enter your email"
+                    placeholder='Enter your email'
                   />
                   {errors.email && (
-                    <div className="invalid-feedback">{errors.email.message}</div>
+                    <div className='invalid-feedback'>
+                      {errors.email.message}
+                    </div>
                   )}
                 </div>
 
                 {/* Password Field */}
-                <div className="mb-3">
-                  <label htmlFor="password" className="form-label">
+                <div className='mb-3'>
+                  <label htmlFor='password' className='form-label'>
                     Password
                   </label>
                   <input
-                    type="password"
+                    type='password'
                     className={`form-control ${errors.password ? 'is-invalid' : ''}`}
-                    id="password"
+                    id='password'
                     {...register('password', {
                       required: ERROR_MESSAGES.VALIDATION.REQUIRED_FIELD,
                     })}
-                    placeholder="Enter your password"
+                    placeholder='Enter your password'
                   />
                   {errors.password && (
-                    <div className="invalid-feedback">{errors.password.message}</div>
+                    <div className='invalid-feedback'>
+                      {errors.password.message}
+                    </div>
                   )}
                 </div>
 
                 {/* Submit Button */}
                 <button
-                  type="submit"
-                  className="btn btn-primary w-100 mb-3"
+                  type='submit'
+                  className='btn btn-primary w-100 mb-3'
                   disabled={loading}
                 >
                   {loading ? 'Logging In...' : 'Login'}
                 </button>
 
                 {/* Register Link */}
-                <div className="text-center">
-                  <p className="mb-0">
+                <div className='text-center'>
+                  <p className='mb-0'>
                     Don't have an account?{' '}
-                    <Link to="/register" className="text-decoration-none">
+                    <Link to='/register' className='text-decoration-none'>
                       Register here
                     </Link>
                   </p>

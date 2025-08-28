@@ -2,8 +2,10 @@
 export const debounce = (fn, delay = 400) => {
   let timerId;
   return (...args) => {
-    clearTimeout(timerId);
-    timerId = setTimeout(() => fn(...args), delay);
+    if (typeof window !== 'undefined') {
+      window.clearTimeout(timerId);
+      timerId = window.setTimeout(() => fn(...args), delay);
+    }
   };
 };
 

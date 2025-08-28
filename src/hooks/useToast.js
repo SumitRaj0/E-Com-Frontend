@@ -5,31 +5,37 @@ export const useToast = () => {
   const [toasts, setToasts] = useState([]);
 
   // Add a new toast
-  const addToast = useCallback((message, type = 'info', duration = 5000) => {
-    const id = Date.now() + Math.random();
-    const newToast = {
-      id,
-      message,
-      type,
-      duration,
-    };
+  const addToast = useCallback(
+    (message, type = 'info', duration = 5000) => {
+      const id = Date.now() + Math.random();
+      const newToast = {
+        id,
+        message,
+        type,
+        duration,
+      };
 
-    setToasts(prev => [...prev, newToast]);
+      setToasts((prev) => [...prev, newToast]);
 
-    // Auto remove toast after duration
-    if (duration > 0) {
-      setTimeout(() => {
-        removeToast(id);
-      }, duration);
-    }
+      // Auto remove toast after duration
+      if (duration > 0) {
+        window.setTimeout(() => {
+          removeToast(id);
+        }, duration);
+      }
 
-    return id;
-  }, []);
+      return id;
+    },
+    [removeToast]
+  );
 
   // Remove a specific toast
-  const removeToast = useCallback((id) => {
-    setToasts(prev => prev.filter(toast => toast.id !== id));
-  }, []);
+  const removeToast = useCallback(
+    (id) => {
+      setToasts((prev) => prev.filter((toast) => toast.id !== id));
+    },
+    [setToasts]
+  );
 
   // Remove all toasts
   const clearToasts = useCallback(() => {
@@ -37,43 +43,61 @@ export const useToast = () => {
   }, []);
 
   // Success toast
-  const showSuccess = useCallback((message, duration) => {
-    return addToast(message, 'success', duration);
-  }, [addToast]);
+  const showSuccess = useCallback(
+    (message, duration) => {
+      return addToast(message, 'success', duration);
+    },
+    [addToast]
+  );
 
   // Error toast
-  const showError = useCallback((message, duration) => {
-    return addToast(message, 'error', duration);
-  }, [addToast]);
+  const showError = useCallback(
+    (message, duration) => {
+      return addToast(message, 'error', duration);
+    },
+    [addToast]
+  );
 
   // Warning toast
-  const showWarning = useCallback((message, duration) => {
-    return addToast(message, 'warning', duration);
-  }, [addToast]);
+  const showWarning = useCallback(
+    (message, duration) => {
+      return addToast(message, 'warning', duration);
+    },
+    [addToast]
+  );
 
   // Info toast
-  const showInfo = useCallback((message, duration) => {
-    return addToast(message, 'info', duration);
-  }, [addToast]);
+  const showInfo = useCallback(
+    (message, duration) => {
+      return addToast(message, 'info', duration);
+    },
+    [addToast]
+  );
 
   // Loading toast
-  const showLoading = useCallback((message) => {
-    return addToast(message, 'loading', 0); // No auto-remove for loading
-  }, [addToast]);
+  const showLoading = useCallback(
+    (message) => {
+      return addToast(message, 'loading', 0);
+    },
+    [addToast]
+  );
 
   // Update loading toast to success/error
-  const updateLoadingToast = useCallback((id, message, type) => {
-    setToasts(prev => 
-      prev.map(toast => 
-        toast.id === id ? { ...toast, message, type } : toast
-      )
-    );
+  const updateLoadingToast = useCallback(
+    (id, message, type) => {
+      setToasts((prev) =>
+        prev.map((toast) =>
+          toast.id === id ? { ...toast, message, type } : toast
+        )
+      );
 
-    // Auto remove after showing result
-    setTimeout(() => {
-      removeToast(id);
-    }, 3000);
-  }, [removeToast]);
+      // Auto remove after showing result
+      window.setTimeout(() => {
+        removeToast(id);
+      }, 3000);
+    },
+    [removeToast]
+  );
 
   return {
     toasts,

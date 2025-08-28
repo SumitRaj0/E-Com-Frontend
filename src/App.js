@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { lazy, Suspense } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
@@ -10,14 +10,18 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { CartProvider, useCart } from './contexts/CartContext';
 import { ToastContainer } from './components/Toast/Toast';
 import { useToast } from './hooks/useToast';
-import Login from './pages/Login/Login';
-import Register from './pages/Register/Register';
-import Dashboard from './pages/Dashboard/Dashboard';
-import Products from './pages/Products/Products';
-import MerchantDashboard from './pages/MerchantDashboard/MerchantDashboard';
-import Checkout from './pages/Checkout/Checkout';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+
+// Lazy load components
+const Login = lazy(() => import('./pages/Login/Login'));
+const Register = lazy(() => import('./pages/Register/Register'));
+const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'));
+const Products = lazy(() => import('./pages/Products/Products'));
+const MerchantDashboard = lazy(
+  () => import('./pages/MerchantDashboard/MerchantDashboard')
+);
+const Checkout = lazy(() => import('./pages/Checkout/Checkout'));
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -82,56 +86,70 @@ const Header = () => {
   );
 };
 
+// Loading component for lazy loading
+const LoadingSpinner = () => (
+  <div
+    className='d-flex justify-content-center align-items-center'
+    style={{ minHeight: '400px' }}
+  >
+    <div className='spinner-border text-primary' role='status'>
+      <span className='visually-hidden'>Loading...</span>
+    </div>
+  </div>
+);
+
 const AppContent = () => {
   const { toasts, removeToast } = useToast();
 
   return (
     <>
       <Header />
-      <Routes>
-        <Route path='/' element={<Navigate to='/products' />} />
-        <Route path='/products' element={<Products />} />
-        <Route
-          path='/login'
-          element={
-            <PublicRoute>
-              <Login />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path='/register'
-          element={
-            <PublicRoute>
-              <Register />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path='/dashboard'
-          element={
-            <ProtectedRoute>
-              <Dashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path='/merchant-dashboard'
-          element={
-            <ProtectedRoute>
-              <MerchantDashboard />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path='/checkout'
-          element={
-            <ProtectedRoute>
-              <Checkout />
-            </ProtectedRoute>
-          }
-        />
-      </Routes>
+      <Suspense fallback={<LoadingSpinner />}>
+        <Routes>
+          <Route path='/' element={<Navigate to='/products' />} />
+          <Route path='/products' element={<Products />} />
+          <Route
+            path='/login'
+            element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path='/register'
+            element={
+              <PublicRoute>
+                <Register />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path='/dashboard'
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/merchant-dashboard'
+            element={
+              <ProtectedRoute>
+                <MerchantDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path='/checkout'
+            element={
+              <ProtectedRoute>
+                <Checkout />
+              </ProtectedRoute>
+            }
+          />
+        </Routes>
+      </Suspense>
       <ToastContainer toasts={toasts} onRemove={removeToast} />
     </>
   );

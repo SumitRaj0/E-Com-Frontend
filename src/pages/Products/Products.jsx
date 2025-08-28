@@ -1,13 +1,16 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo, lazy } from 'react';
 import { useToast } from '../../hooks/useToast';
 import { productAPI } from '../../services/api';
 import ErrorHandler from '../../utils/errorHandler';
-import { ERROR_MESSAGES } from '../../utils/errorMessages';
-import ProductCard from '../../components/ProductCard/ProductCard';
 import { debounce } from '../../utils/debounce';
 import { PREDEFINED_CATEGORIES } from '../../constants/categories';
+import LazyWrapper from '../../components/LazyWrapper';
 
-// Products page for browsing and filtering products
+// Lazy load ProductCard component
+const ProductCard = lazy(
+  () => import('../../components/ProductCard/ProductCard')
+);
+
 const Products = () => {
   const { showError } = useToast();
   const [products, setProducts] = useState([]);
@@ -71,7 +74,6 @@ const Products = () => {
   };
 
   // Refetch on dependency changes
-  /* eslint-disable-next-line */
   useEffect(() => {
     fetchProducts();
   }, [
@@ -83,7 +85,7 @@ const Products = () => {
     page,
     limit,
     filters.q,
-  ]);
+  ]); // Removed fetchProducts from dependencies to prevent infinite re-renders
 
   // Handlers
   const handleFilterChange = (e) => {
@@ -278,7 +280,9 @@ const Products = () => {
           <div className='row g-4 mb-4'>
             {products.map((product) => (
               <div key={product._id} className='col-md-6 col-lg-4 col-xl-3'>
-                <ProductCard product={product} />
+                <LazyWrapper>
+                  <ProductCard product={product} />
+                </LazyWrapper>
               </div>
             ))}
           </div>

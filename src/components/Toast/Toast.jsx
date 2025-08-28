@@ -1,4 +1,3 @@
-import React from 'react';
 import { getToastStyles } from '../../hooks/useToast';
 
 // Toast component for displaying notifications
@@ -10,14 +9,14 @@ const Toast = ({ toast, onRemove }) => {
   const styles = getToastStyles(toast.type);
 
   return (
-    <div style={styles} className="toast-item">
-      <div className="toast-content">
-        <span className="toast-message">{toast.message}</span>
+    <div style={styles} className='toast-item'>
+      <div className='toast-content'>
+        <span className='toast-message'>{toast.message}</span>
       </div>
-      
+
       <button
         onClick={handleRemove}
-        className="toast-close"
+        className='toast-close'
         style={{
           background: 'none',
           border: 'none',
@@ -27,7 +26,7 @@ const Toast = ({ toast, onRemove }) => {
           padding: '0',
           marginLeft: '12px',
         }}
-        aria-label="Close notification"
+        aria-label='Close notification'
       >
         ×
       </button>
@@ -41,7 +40,7 @@ export const ToastContainer = ({ toasts, onRemove }) => {
 
   return (
     <div
-      className="toast-container"
+      className='toast-container'
       style={{
         position: 'fixed',
         top: '20px',
@@ -53,11 +52,7 @@ export const ToastContainer = ({ toasts, onRemove }) => {
       }}
     >
       {toasts.map((toast) => (
-        <Toast
-          key={toast.id}
-          toast={toast}
-          onRemove={onRemove}
-        />
+        <Toast key={toast.id} toast={toast} onRemove={onRemove} />
       ))}
     </div>
   );

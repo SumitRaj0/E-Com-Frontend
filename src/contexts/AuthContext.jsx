@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import { useToast } from '../hooks/useToast';
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from '../utils/errorMessages';
 
@@ -20,6 +20,23 @@ export const AuthProvider = ({ children }) => {
 
   // Check if user is customer
   const isCustomer = user?.role === 'customer';
+
+  // Logout function - defined before useEffect to avoid temporal dead zone
+  const logout = () => {
+    try {
+      // Clear state
+      setToken(null);
+      setUser(null);
+
+      // Clear localStorage
+      localStorage.removeItem('token');
+      localStorage.removeItem('user');
+
+      showSuccess(SUCCESS_MESSAGES.AUTH.LOGOUT_SUCCESS);
+    } catch (error) {
+      console.error('Error during logout:', error);
+    }
+  };
 
   // Initialize auth state from localStorage
   useEffect(() => {
@@ -81,23 +98,6 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
-  // Logout function
-  const logout = () => {
-    try {
-      // Clear state
-      setToken(null);
-      setUser(null);
-
-      // Clear localStorage
-      localStorage.removeItem('token');
-      localStorage.removeItem('user');
-
-      showSuccess(SUCCESS_MESSAGES.AUTH.LOGOUT_SUCCESS);
-    } catch (error) {
-      console.error('Error during logout:', error);
-    }
-  };
-
   // Update user data
   const updateUser = (updatedUserData) => {
     try {
@@ -115,7 +115,22 @@ export const AuthProvider = ({ children }) => {
 
     try {
       // Decode JWT token (basic check)
-      const payload = JSON.parse(atob(token.split('.')[1]));
+      let payload;
+      if (typeof window !== 'undefined' && window.atob) {
+        payload = JSON.parse(window.atob(token.split('.')[1]));
+      } else if (typeof Buffer !== 'undefined') {
+        payload = JSON.parse(
+          Buffer.from(token.split('.')[1], 'base64').toString()
+        );
+      } else {
+        // Fallback for environments without atob or Buffer
+        const base64 = token.split('.')[1];
+        const decoded = decodeURIComponent(
+          escape(atob ? atob(base64) : base64)
+        );
+        payload = JSON.parse(decoded);
+      }
+
       const currentTime = Date.now() / 1000;
 
       if (payload.exp < currentTime) {
@@ -146,11 +161,7 @@ export const AuthProvider = ({ children }) => {
     checkTokenValidity,
   };
 
-  return (
-    <AuthContext.Provider value={value}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
 // Custom hook to use auth context

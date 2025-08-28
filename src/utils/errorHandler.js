@@ -7,7 +7,7 @@ export class ErrorHandler {
     if (error.response) {
       // Server responded with error status
       const { status, data } = error.response;
-      
+
       switch (status) {
         case 400:
           return this.handleBadRequest(data);
@@ -42,11 +42,11 @@ export class ErrorHandler {
     if (data?.error?.message) {
       return data.error.message;
     }
-    
+
     if (data?.errors && Array.isArray(data.errors)) {
-      return data.errors.map(err => err.msg).join(', ');
+      return data.errors.map((err) => err.msg).join(', ');
     }
-    
+
     return ERROR_MESSAGES.VALIDATION.REQUIRED_FIELD;
   }
 
@@ -55,7 +55,7 @@ export class ErrorHandler {
     if (data?.error?.message) {
       return data.error.message;
     }
-    
+
     return ERROR_MESSAGES.API.UNKNOWN_ERROR;
   }
 
@@ -64,7 +64,7 @@ export class ErrorHandler {
     if (data?.error?.message) {
       return data.error.message;
     }
-    
+
     return ERROR_MESSAGES.GENERAL.OPERATION_FAILED;
   }
 
@@ -74,9 +74,15 @@ export class ErrorHandler {
       case 'required':
         return ERROR_MESSAGES.VALIDATION.REQUIRED_FIELD;
       case 'minLength':
-        return ERROR_MESSAGES.VALIDATION.MIN_LENGTH(field, additionalData.length);
+        return ERROR_MESSAGES.VALIDATION.MIN_LENGTH(
+          field,
+          additionalData.length
+        );
       case 'maxLength':
-        return ERROR_MESSAGES.VALIDATION.MAX_LENGTH(field, additionalData.length);
+        return ERROR_MESSAGES.VALIDATION.MAX_LENGTH(
+          field,
+          additionalData.length
+        );
       case 'email':
         return ERROR_MESSAGES.AUTH.INVALID_EMAIL;
       case 'password':
@@ -93,29 +99,32 @@ export class ErrorHandler {
     if (error.code === 'ECONNABORTED') {
       return ERROR_MESSAGES.API.TIMEOUT;
     }
-    
+
     if (error.message.includes('Network Error')) {
       return ERROR_MESSAGES.API.NETWORK_ERROR;
     }
-    
+
     return ERROR_MESSAGES.API.UNKNOWN_ERROR;
   }
 
   // Get user-friendly error message
-  static getErrorMessage(error, fallback = ERROR_MESSAGES.GENERAL.SOMETHING_WENT_WRONG) {
+  static getErrorMessage(
+    error,
+    fallback = ERROR_MESSAGES.GENERAL.SOMETHING_WENT_WRONG
+  ) {
     try {
       if (typeof error === 'string') {
         return error;
       }
-      
+
       if (error?.message) {
         return error.message;
       }
-      
+
       if (error?.error?.message) {
         return error.error.message;
       }
-      
+
       return fallback;
     } catch {
       return fallback;
