@@ -1,4 +1,5 @@
-import React, { lazy, Suspense } from 'react';
+/* eslint-disable no-unused-vars */
+import React, { Suspense } from 'react';
 import {
   BrowserRouter as Router,
   Routes,
@@ -10,18 +11,17 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { CartProvider, useCart } from './contexts/CartContext';
 import { ToastContainer } from './components/Toast/Toast';
 import { useToast } from './hooks/useToast';
+
+import {
+  Login,
+  Register,
+  Dashboard,
+  Products,
+  MerchantDashboard,
+  Checkout,
+} from './utils/lazyComponents';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-
-// Lazy load components
-const Login = lazy(() => import('./pages/Login/Login'));
-const Register = lazy(() => import('./pages/Register/Register'));
-const Dashboard = lazy(() => import('./pages/Dashboard/Dashboard'));
-const Products = lazy(() => import('./pages/Products/Products'));
-const MerchantDashboard = lazy(
-  () => import('./pages/MerchantDashboard/MerchantDashboard')
-);
-const Checkout = lazy(() => import('./pages/Checkout/Checkout'));
 
 const ProtectedRoute = ({ children }) => {
   const { isAuthenticated } = useAuth();
@@ -87,6 +87,7 @@ const Header = () => {
 };
 
 // Loading component for lazy loading
+// eslint-disable-next-line no-unused-vars
 const LoadingSpinner = () => (
   <div
     className='d-flex justify-content-center align-items-center'
@@ -98,6 +99,7 @@ const LoadingSpinner = () => (
   </div>
 );
 
+// eslint-disable-next-line no-unused-vars
 const AppContent = () => {
   const { toasts, removeToast } = useToast();
 

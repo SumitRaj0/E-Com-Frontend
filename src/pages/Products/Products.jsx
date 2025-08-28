@@ -1,15 +1,13 @@
-import { useState, useEffect, useMemo, lazy } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { useToast } from '../../hooks/useToast';
 import { productAPI } from '../../services/api';
 import ErrorHandler from '../../utils/errorHandler';
 import { debounce } from '../../utils/debounce';
 import { PREDEFINED_CATEGORIES } from '../../constants/categories';
+// eslint-disable-next-line no-unused-vars
 import LazyWrapper from '../../components/LazyWrapper';
-
-// Lazy load ProductCard component
-const ProductCard = lazy(
-  () => import('../../components/ProductCard/ProductCard')
-);
+// eslint-disable-next-line no-unused-vars
+import { ProductCard } from '../../utils/lazyComponents';
 
 const Products = () => {
   const { showError } = useToast();

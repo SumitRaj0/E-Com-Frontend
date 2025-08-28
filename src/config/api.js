@@ -1,24 +1,26 @@
 // API Configuration
 const API_CONFIG = {
-  // Primary: Render production URL
-  PRODUCTION: 'https://e-com-backend-y9ps.onrender.com/api',
+  // Default: Render production URL (always running)
+  DEFAULT: 'https://e-com-backend-y9ps.onrender.com/api',
 
-  // Fallback: Local development URL
+  // Optional: Local development URL (only if needed)
   LOCAL: 'http://localhost:5050/api',
+
   // Get the appropriate API URL based on environment
   getBaseUrl: () => {
-    // Check if we're in production (Render)
-    if (process.env.NODE_ENV === 'production') {
-      return API_CONFIG.PRODUCTION;
-    }
-
-    // Check if custom API URL is set
+    // Check if custom API URL is set in environment
     if (process.env.REACT_APP_API_URL) {
       return process.env.REACT_APP_API_URL;
     }
 
-    return API_CONFIG.LOCAL;
+    // Check if we're in production (Render)
+    if (process.env.NODE_ENV === 'production') {
+      return API_CONFIG.DEFAULT;
+    }
+
+    return API_CONFIG.DEFAULT;
   },
+
   // Test API connectivity
   testConnection: async () => {
     try {
@@ -36,6 +38,7 @@ const API_CONFIG = {
     isProduction: process.env.NODE_ENV === 'production',
     hasCustomUrl: !!process.env.REACT_APP_API_URL,
     environment: process.env.NODE_ENV || 'development',
+    defaultUrl: API_CONFIG.DEFAULT,
   }),
 };
 

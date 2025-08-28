@@ -4,6 +4,11 @@ import { useState, useCallback } from 'react';
 export const useToast = () => {
   const [toasts, setToasts] = useState([]);
 
+  // Remove a specific toast
+  const removeToast = useCallback((id) => {
+    setToasts((prev) => prev.filter((toast) => toast.id !== id));
+  }, []);
+
   // Add a new toast
   const addToast = useCallback(
     (message, type = 'info', duration = 5000) => {
@@ -27,14 +32,6 @@ export const useToast = () => {
       return id;
     },
     [removeToast]
-  );
-
-  // Remove a specific toast
-  const removeToast = useCallback(
-    (id) => {
-      setToasts((prev) => prev.filter((toast) => toast.id !== id));
-    },
-    [setToasts]
   );
 
   // Remove all toasts

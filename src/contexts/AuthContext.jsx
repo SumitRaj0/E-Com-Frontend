@@ -121,9 +121,9 @@ export const AuthProvider = ({ children }) => {
       } else {
         // Fallback for environments without atob
         console.warn('atob not available, skipping token validation');
-        return true; // Skip validation if we can't decode
+        return true;
       }
-      
+
       const currentTime = Date.now() / 1000;
 
       if (payload.exp < currentTime) {
